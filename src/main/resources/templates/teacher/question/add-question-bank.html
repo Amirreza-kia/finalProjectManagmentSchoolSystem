@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست سوالات</title>
+    <style>
+        /* استایل‌های کلی */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298); /* گرادینت آبی */
+            margin: 0;
+            padding: 0;
+            color: #fff; /* تغییر رنگ متن به سفید */
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff; /* تغییر رنگ عنوان به سفید */
+            font-size: 2.5em;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out; /* انیمیشن fadeIn */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        table {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* سایه مشکی */
+            background-color: #4b0082; /* پس‌زمینه جدول به بنفش */
+            border-radius: 10px;
+            overflow: hidden;
+            animation: slideIn 1.5s ease-in-out; /* انیمیشن slideIn */
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #6a5acd; /* خطوط جدول به رنگ بنفش روشن */
+        }
+
+        th {
+            background-color: #483d8b; /* پس‌زمینه هدر به بنفش تیره */
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #6a5acd; /* پس‌زمینه ردیف‌های زوج به بنفش روشن */
+        }
+
+        tr:hover {
+            background-color: #7b68ee; /* تغییر رنگ hover به بنفش روشن‌تر */
+        }
+
+        button {
+            background-color: #4169e1; /* رنگ دکمه‌ها به آبی */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* اضافه کردن transform به transition */
+        }
+
+        button:hover {
+            background-color: #1e90ff; /* تغییر رنگ دکمه‌ها هنگام hover به آبی روشن‌تر */
+            transform: scale(1.1); /* بزرگ‌تر شدن دکمه‌ها هنگام hover */
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 2.5s ease-in-out; /* انیمیشن fadeIn */
+        }
+
+        .back-link a {
+            color: #fff; /* رنگ لینک به سفید */
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #7b68ee; /* تغییر رنگ لینک هنگام hover به بنفش روشن */
+        }
+    </style>
+</head>
+<body>
+
+<h1>لیست سوالات</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>عنوان</th>
+        <th>متن سوال</th>
+        <th>نوع</th>
+        <th>ویرایش سوال</th>
+        <th>حذف سوال</th>
+        <th>اضافه کردن سوال به امتحان</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="question : ${questionList}">
+        <td th:text="${question.title}"></td>
+        <td th:text="${question.questionText}"></td>
+        <td th:text="${question.typeQuestion}"></td>
+        <td>
+            <form th:action="@{/question/{id}/edit(id=${question.id})}" method="get">
+                <button type="submit">ویرایش سوال</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/question/{id}/delete(id=${question.id})}" method="get">
+                <button type="submit">حذف سوال</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/question/addBank}" method="post">
+                <input type="hidden" name="examId" th:value="${examId}">
+                <input type="hidden" name="questionId" th:value="${question.id}">
+                <button type="submit">اضافه کردن به امتحان</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="back-link">
+    <a th:href="@{/dashboard}">🔙 بازگشت به صفحه ادمین</a>
+</div>
+
+</body>
+</html>

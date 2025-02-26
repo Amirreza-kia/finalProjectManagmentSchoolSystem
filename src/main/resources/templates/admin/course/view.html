@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${course.title}"></title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        /* استایل کلی صفحه */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: white;
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #ddd;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        form {
+            display: inline;
+        }
+
+        button {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #e60000;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ddd;
+            text-decoration: underline;
+        }
+
+        .course-details {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .course-details p, .course-details a {
+            text-align: center;
+        }
+
+        .course-details a {
+            background-color: #667eea;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 10px auto;
+        }
+
+        .course-details a:hover {
+            background-color: #5a6fd1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="course-details">
+    <h1 th:text="${course.title}">Course Title</h1>
+    <p th:text="${course.courseCode}">Course Code</p>
+
+    <h2>استاد دوره</h2>
+    <p th:if="${teacher != null}" th:text="${teacher.firstName + ' ' + teacher.lastName}">Instructor's Name</p>
+    <p th:if="${teacher == null}">هیچ استادی برای این دوره انتخاب نشده است.</p>
+    <a th:href="@{/course/{id}/add-teacher(id=${course.id})}">افزودن استاد</a>
+
+    <h2>دانشجویان دوره</h2>
+    <ul th:if="${!students.isEmpty()}">
+        <li th:each="student : ${students}">
+            <span th:text="${student.firstName + ' ' + student.lastName}">Student Name</span>
+            <form th:action="@{/course/{id}/remove-student(id=${course.id})}" method="post" style="display:inline;">
+                <input type="hidden" name="studentId" th:value="${student.id}">
+                <button type="submit">حذف</button>
+            </form>
+        </li>
+    </ul>
+    <p th:if="${students.isEmpty()}">هیچ دانشجویی در این دوره ثبت‌نام نکرده است.</p>
+    <a th:href="@{/course/{id}/add-student(id=${course.id})}">افزودن دانشجو</a>
+
+    <br><br>
+    <a th:href="@{/course}">بازگشت به لیست دوره‌ها</a>
+</div>
+
+</body>
+</html>

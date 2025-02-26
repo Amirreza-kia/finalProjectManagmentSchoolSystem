@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست دوره‌ها</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        /* استایل کلی صفحه */
+        body {
+            font-family: 'Poppins', sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            text-align: right;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #5a6fd1;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            background-color: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            background-color: #5a6fd1;
+        }
+    </style>
+</head>
+<body>
+
+<h1>لیست دوره‌ها</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>عنوان دوره</th>
+        <th>تاریخ شروع</th>
+        <th>تاریخ پایان دوره</th>
+        <th>کد درس</th>
+        <th>عملیات</th>
+        <th>حذف</th>
+        <th>تغییرات</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.title}"></td>
+        <td th:text="${course.startDate}"></td>
+        <td th:text="${course.endDate}"></td>
+        <td th:text="${course.courseCode}"></td>
+        <td>
+            <a th:href="@{/course/{id}(id=${course.id})}">مشاهده</a>
+        </td>
+        <td>
+            <form th:action="@{/course/{id}/delete(id=${course.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('آیا از حذف این دوره مطمئن هستید؟')">حذف دوره</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/course/{id}/edit(id=${course.id})}" method="get" style="display:inline;">
+                <button type="submit">تغییر در دوره‌ها</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="back-link">
+    <a th:href="@{/dashboard}">بازگشت به صفحه ادمین</a>
+</div>
+
+</body>
+</html>

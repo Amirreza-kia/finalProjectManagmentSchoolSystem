@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>افزودن آزمون</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00bcd4;
+            margin-top: 30px;
+            animation: slideIn 0.7s ease-out;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #00bcd4;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #333;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #00bcd4;
+            background-color: #444;
+        }
+
+        button {
+            background-color: #00bcd4;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #007c91;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #00bcd4;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+            color: #007c91;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body >
+
+<div class="container">
+    <h1>افزودن آزمون جدید</h1>
+    <form th:action="@{/exam/save-exam/{id}(id=${courseId})}" th:object="${exam}" method="post">
+        <label for="title">عنوان:</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="عنوان آزمون" required>
+
+        <label for="description">توضیحات:</label>
+        <input type="text" id="description" th:field="*{description}" placeholder="توضیحات آزمون" required>
+
+        <label for="duration">زمان (دقیقه):</label>
+        <input type="number" id="duration" th:field="*{duration}" placeholder="مدت زمان آزمون" required>
+
+        <button type="submit">ذخیره</button>
+    </form>
+
+    <div class="back-link">
+        <a th:href="@{/dashboard}">بازگشت به صفحه ادمین</a>
+    </div>
+</div>
+
+</body>
+</html>

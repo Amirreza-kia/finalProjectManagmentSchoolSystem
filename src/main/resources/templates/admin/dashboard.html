@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        /* استایل کلی صفحه */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f8fb;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li form,
+        nav ul li a {
+            display: block;
+        }
+
+        nav ul li button,
+        nav ul li a {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        nav ul li button:hover,
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        nav ul li button:active,
+        nav ul li a:active {
+            transform: translateY(0);
+        }
+
+        main {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        main h2 {
+            color: #0d6efd;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        main p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* انیمیشن‌ها */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header,
+        main,
+        footer {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Admin Menu</h1>
+    <nav>
+        <ul>
+            <li>
+                <form th:action="@{/pending}" method="get">
+                    <button type="submit">تایید ثبت نام در دوره</button>
+                </form>
+            </li>
+            <li>
+                <form th:action="@{/course/add}" method="get">
+                    <button type="submit">اضافه کردن دوره</button>
+                </form>
+            </li>
+            <li>
+                <form th:action="@{/search}" method="get">
+                    <button type="submit">جستجو</button>
+                </form>
+            </li>
+            <li>
+                <form th:action="@{/search/search-all}" method="get">
+                    <button type="submit">جستجو کلی</button>
+                </form>
+            </li>
+            <li>
+                <form th:action="@{/course}" method="get">
+                    <button type="submit">مدیریت دوره ها</button>
+                </form>
+            </li>
+            <li>
+                <form th:action="@{/teachers}" method="get">
+                    <button type="submit">کنترل اساتید</button>
+                </form>
+            </li>
+            <li>
+                <form th:action="@{/students}" method="get">
+                    <button type="submit">کنترل دانشجو ها</button>
+                </form>
+            </li>
+            <li><a href="/admin/exams">مدیریت امتحانات</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">خروج</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h2 th:text="${message}"></h2>
+    <p>This is the admin dashboard. You can manage appUser, courses, and exams here.</p>
+</main>
+
+<footer>
+    <p>&copy; 2023 Admin Dashboard. All rights reserved.</p>
+</footer>
+</body>
+</html>

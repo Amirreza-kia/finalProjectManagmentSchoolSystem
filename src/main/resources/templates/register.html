@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ثبت‌نام</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        /* استایل برای کل صفحه */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 400px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #0d6efd;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+        }
+
+        button {
+            background-color: #667eea;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #5a6fd1;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* استایل پیغام‌ها */
+        .success-message {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #a5d6a7;
+            border-radius: 8px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ef9a9a;
+            border-radius: 8px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        p {
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* استایل برای دکمه دیدن پسورد */
+        .toggle-password {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: underline;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>ثبت‌نام</h1>
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <div>
+            <label>نام کاربری:
+                <input type="text" th:field="*{username}" required/>
+                <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red;"></span>
+            </label>
+        </div>
+        <div>
+            <label>کلمه عبور:
+                <input type="password" id="password" th:field="*{password}" required/>
+                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;"></span>
+            </label>
+            <!-- دکمه برای نمایش/مخفی کردن پسورد -->
+            <button type="button" id="togglePassword" class="toggle-password">دیدن پسورد</button>
+        </div>
+        <div>
+            <label>نام: <input type="text" th:field="*{firstName}" required/></label>
+        </div>
+        <div>
+            <label>نام خانوادگی: <input type="text" th:field="*{lastName}" required/></label>
+        </div>
+        <div>
+            <label>نقش:
+                <select th:field="*{role}">
+                    <option value="STUDENT">دانشجو</option>
+                    <option value="TEACHER">استاد</option>
+                </select>
+            </label>
+        </div>
+        <button type="submit">ثبت‌نام</button>
+    </form>
+
+    <p>قبلاً حساب کاربری دارید؟ <a th:href="@{/login}">اینجا وارد شوید</a>.</p>
+</div>
+
+<script>
+    // JavaScript برای نمایش/مخفی کردن پسورد
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordField = document.getElementById("password");
+
+    togglePassword.addEventListener("click", function () {
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            togglePassword.textContent = "مخفی کردن پسورد";
+        } else {
+            passwordField.type = "password";
+            togglePassword.textContent = "دیدن پسورد";
+        }
+    });
+</script>
+</body>
+</html>

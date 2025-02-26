@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>کاربران در انتظار تایید</title>
+    <style>
+        /* کلیات طراحی */
+        body {
+            font-family: 'Arial', sans-serif; /* فونت مدرن */
+            background-color: #f9fafb; /* پس‌زمینه روشن */
+            color: #333;
+            padding: 30px;
+            direction: rtl; /* چیدمان راست به چپ */
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #007BFF; /* رنگ آبی مدرن برای عنوان */
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        /* جدول طراحی */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: right; /* راست‌چین کردن متن برای فارسی */
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f0f8ff; /* پس‌زمینه آبی روشن برای هدر */
+            color: #007BFF; /* رنگ آبی تیره برای هدر */
+            font-weight: bold;
+        }
+
+        td {
+            background-color: #ffffff;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9; /* رنگ ردیف‌های زوج */
+        }
+
+        /* دکمه‌ها */
+        td button {
+            padding: 8px 15px;
+            background-color: #28a745; /* رنگ سبز جذاب برای دکمه تایید */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        td button:hover {
+            background-color: #218838; /* سبز تیره‌تر هنگام هاور */
+            transform: scale(1.05); /* افکت بزرگ شدن دکمه */
+        }
+
+        td button:focus {
+            outline: none;
+        }
+
+        /* لینک بازگشت */
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            text-align: center;
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 20px;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+            border: 1px solid #007BFF;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #007BFF;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        a:focus {
+            outline: none;
+        }
+
+        /* طراحی ریسپانسیو */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            td button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>کاربران در انتظار تایید</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>نام</th>
+            <th>نام خانواگی</th>
+            <th>نام کاربری</th>
+            <th>نقش</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <form th:action="@{/approve/{id}(id=${user.getId()})}" method="post">
+                    <button type="submit">تایید ثبت‌نام کاربر</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/dashboard}">بازگشت به صفحه ادمین</a>
+</div>
+</body>
+</html>

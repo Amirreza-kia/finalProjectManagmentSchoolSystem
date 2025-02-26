@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>دوره‌های من</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            font-size: 2.5em;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        table {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+            background-color: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            animation: slideIn 1.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #1a1a1a;
+        }
+
+        tr:hover {
+            background-color: #333;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        .back-link {
+            margin-bottom: auto;
+            background: #1a1a1a;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 2.5s ease-in-out;
+        }
+
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body th:background="@{/images/joler.jpg}">
+
+<h1>دوره‌های من</h1>
+
+<table >
+    <thead>
+    <tr>
+        <th>عنوان دوره</th>
+        <th>تاریخ شروع</th>
+        <th>تاریخ پایان دوره</th>
+        <th>امتحانات دوره</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.title}"></td>
+        <td th:text="${course.startDate}"></td>
+        <td th:text="${course.endDate}"></td>
+        <td>
+            <form th:action="@{/exam/{courseId}(courseId=${course.id})}" method="get">
+                <button type="submit">آزمون‌های دوره</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="back-link">
+    <a th:href="@{/dashboard}">بازگشت به صفحه ادمین 😎</a>
+</div>
+
+</body>
+</html>

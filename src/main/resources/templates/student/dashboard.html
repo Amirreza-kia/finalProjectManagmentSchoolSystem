@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <h1>Welcome, Student!</h1>
+    <nav>
+        <ul>
+            <li><a href="/student/dashboard">Home</a></li>
+            <li><a href="/student/courses">Courses</a></li>
+            <li><a href="/student/exams">Exams</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h2 th:text="${message}"></h2>
+    <p>This is the student dashboard. You can view your courses and exams here.</p>
+</main>
+
+<footer>
+    <p>&copy; 2023 Online Exam System</p>
+</footer>
+</body>
+</html>

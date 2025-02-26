@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>جستجو کاربر</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #1e90ff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e90ff;
+        }
+
+        select, input {
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #1e90ff;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #4682b4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #1e90ff;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1e90ff;
+            color: white;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: #4682b4;
+        }
+    </style>
+</head>
+<body>
+<h1>جستجوی کاربران</h1>
+<form action="/search" method="get">
+    <label for="role">نقش کاربر:</label>
+    <select name="role" id="role">
+        <option value="STUDENT">دانشجو</option>
+        <option value="TEACHER">استاد</option>
+    </select>
+    <button type="submit">جستجو</button>
+</form>
+<form action="/search" method="get">
+    <label for="firstName">نام :</label>
+    <input type="text" name="firstName" id="firstName">
+    <button type="submit">جستجو</button>
+</form>
+<form action="/search" method="get">
+    <label for="lastName">نام خانوادگی:</label>
+    <input type="text" name="lastName" id="lastName">
+    <button type="submit">جستجو</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>نام</th>
+        <th>نام خانوادگی</th>
+        <th>وضعیت کاربر</th>
+        <th>نقش کاربر</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.registrationStatus}"></td>
+        <td th:text="${user.role}"></td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/dashboard}">بازگشت به صفحه ادمین</a>
+</body>
+</html>

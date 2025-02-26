@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+</head>
+<body>
+
+<nav th:fragment="navbar">
+    <ul>
+        <li><a th:href="@{/dashboard}">خانه</a></li>
+        <li><a th:href="@{/list-courses.html}">لیست دروس</a></li>
+        <li><a th:href="@{/teacher/add-question-bank.html}">بانک سوالات</a></li>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+</nav>
+</body>
+</html>
