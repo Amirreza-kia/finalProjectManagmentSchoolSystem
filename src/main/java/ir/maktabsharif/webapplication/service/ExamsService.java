@@ -23,4 +23,7 @@ public interface ExamsService {
     List<Exam> getExamsByCourseIdAndTeacherId(Long courseId, Long teacherId);
 
     Exam updateBankQuestion(Long examId, Exam updateExam);
+
+
+    List<Exam> getAvailableExamsStudent(Long studentId,Long courseId);
 }

@@ -26,4 +26,6 @@ public interface CourseService {
 
     List<Course> findAllCoursesByTeacherId(Long teacherId) throws ResourceNotFoundException;
 
+    List<Course> findAllCoursesByStudentId(Long studentId) throws ResourceNotFoundException;
+
 }

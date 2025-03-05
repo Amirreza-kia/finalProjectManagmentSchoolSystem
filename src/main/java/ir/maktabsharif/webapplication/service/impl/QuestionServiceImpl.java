@@ -1,60 +1,93 @@
 package ir.maktabsharif.webapplication.service.impl;
 
+import ir.maktabsharif.webapplication.entity.AppUser;
+import ir.maktabsharif.webapplication.entity.Exam;
+import ir.maktabsharif.webapplication.entity.dto.ExamQuestionDto;
+import ir.maktabsharif.webapplication.entity.dto.QuestionMultiDto;
 import ir.maktabsharif.webapplication.entity.question.*;
 import ir.maktabsharif.webapplication.exception.ResourceNotFoundException;
+import ir.maktabsharif.webapplication.repository.ExamQuestionRepository;
+import ir.maktabsharif.webapplication.repository.ExamRepository;
 import ir.maktabsharif.webapplication.repository.QuestionRepository;
 import ir.maktabsharif.webapplication.service.ExamsService;
 import ir.maktabsharif.webapplication.service.QuestionService;
+import ir.maktabsharif.webapplication.service.usersDetails.CustomUserDetails;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final ExamsService examsService;
+    private final ExamRepository examRepository;
+    private final ExamQuestionRepository examQuestionRepository;
 
-    @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, ExamsService examsService) {
-        this.questionRepository = questionRepository;
-        this.examsService = examsService;
-    }
-
-
-    @Override
-    public List<Question> getQuestionsByExamIdAndTeacherId(Long examId, Long teacherId) {
-        return questionRepository.findQuestionByTeacherId(teacherId);
-    }
-
-    @Override
-    public List<Question> getQuestionsByTeacherIdAndCourseId(Long teacherId, Long courseId) {
-//        return questionRepository.g(teacherId, courseId);
-        return List.of();
-    }
 
     @Override
     @Transactional
-    public void createQuestionDescriptive(DescriptiveQuestion question) {
+    public void createQuestionDescriptive(Question question, Long examId, UserDetails userDetails) {
+        Exam exam = examsService.getExamById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found"));
+        ExamQuestion examQuestion = new ExamQuestion();
+        examQuestion.setQuestion(question);
+        exam.getQuestions().add(examQuestion);
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        AppUser teacher = customUserDetails.getAppUser();
+        question.setTeacher(teacher);
+        question.setCourse(exam.getCourse());
+        question.setDefaultScore(0.0);
         question.setTypeQuestion(TypeQuestion.DESCRIPTIVE);
         questionRepository.save(question);
     }
 
     @Override
-    public void createQuestionMultiple(MultipleChoiceQuestion question) {
+    @Transactional
+    public void createQuestionMultiple(QuestionMultiDto questionMultiDto, Long examId, UserDetails userDetails) {
+        Exam exam = examsService.getExamById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found"));
+        Question question = new Question();
+        question.setTitle(questionMultiDto.getTitle());
+        question.setQuestionText(questionMultiDto.getQuestionText());
+        question.setOptions(questionMultiDto.getOptions());
+        question.setCorrectAnswer(String.valueOf(questionMultiDto.getCorrectAnswer()));
+        question.setDefaultScore(0.0);
+        question.setCourse(exam.getCourse());
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        AppUser teacher = customUserDetails.getAppUser();
+        question.setTeacher(teacher);
+        ExamQuestion examQuestion = new ExamQuestion();
+        examQuestion.setQuestion(question);
+        exam.getQuestions().add(examQuestion);
         question.setTypeQuestion(TypeQuestion.MULTIPLE_CHOICE);
         questionRepository.save(question);
     }
 
     @Override
-    public Question updateQuestion(Question question) {
+    @Transactional
+    public Question updateQuestion(ExamQuestionDto examQuestionDto) {
+        Question question = getQuestionById(examQuestionDto.getQuestionId());
+        question.setQuestionText(examQuestionDto.getQuestionText());
+        question.setTitle(examQuestionDto.getQuestionTitle());
         return questionRepository.save(question);
     }
 
     @Override
-    public void deleteQuestionById(Long questionId) {
+    @Transactional
+    public void deleteQuestionById(Long questionId, Long examId) {
+        Exam exam = examsService.getExamById(examId).get();
+        List<ExamQuestion> examQuestionList = examQuestionRepository
+                .findExamQuestionByQuestionId(questionId);
+        for (ExamQuestion examQuestion : examQuestionList) {
+            exam.getQuestions().remove(examQuestion);
+        }
+        examQuestionRepository.deleteByQuestionId(questionId);
         questionRepository.deleteById(questionId);
     }
 
@@ -64,29 +97,38 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findQuestionByTeacherId(teacherId);
     }
 
-    @Override
-    public void addOptionToQuestion(Question question, String optionText, boolean isCorrect) {
-//        Option option = new Option();
-//        option.setOptionText(optionText);
-//        option.setCorrect(isCorrect);
-//        option.setQuestion(question);
-//
-//        question.getOptions().add(option);
-//        questionRepository.save(question);
-    }
 
     @Override
-    public void updateQuestionScore(Long questionId, Double score) {
-        Question question = questionRepository.findById(questionId)
+    @Transactional
+    public void updateQuestionScore(Long questionId, Double score, Long questionIdReal) {
+        Question question = questionRepository.findById(questionIdReal)
                 .orElseThrow(() -> new RuntimeException("Question not found"));
-        question.setDefaultScore(score);
-        questionRepository.save(question);
+        ExamQuestion examQuestion = examQuestionRepository.findById(questionId).get();
+        examQuestion.setQuestion(question);
+        examQuestion.setScore(score);
+        examQuestionRepository.save(examQuestion);
     }
 
     @Override
     public Question getQuestionById(Long questionId) {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+    }
+
+    @Override
+    @Transactional
+    public void updateMultipleChoiceQuestion(QuestionMultiDto questionMultiDto) {
+        Question question = getQuestionById(questionMultiDto.getId());
+        question.setTitle(questionMultiDto.getTitle());
+        question.setQuestionText(questionMultiDto.getQuestionText());
+        question.setCorrectAnswer(questionMultiDto.getCorrectAnswer());
+        question.setOptions(questionMultiDto.getOptions());
+        questionRepository.save(question);
+    }
+
+    @Override
+    public List<Question> getQuestionByTeacherIdAndCourseId(Long teacherId, Long courseId) {
+        return questionRepository.findByTeacherIdAndCourseId(teacherId, courseId);
     }
 
 

@@ -9,7 +9,11 @@
     <h1>Welcome, Student!</h1>
     <nav>
         <ul>
-            <li><a href="/student/dashboard">Home</a></li>
+            <li>
+                <form th:action="@{/students/courses}" method="get">
+                    <button type="submit">دوره‌های من</button>
+                </form>
+            </li>
             <li><a href="/student/courses">Courses</a></li>
             <li><a href="/student/exams">Exams</a></li>
             <li><a href="/logout">Logout</a></li>

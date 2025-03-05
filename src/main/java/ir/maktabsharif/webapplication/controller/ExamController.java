@@ -37,7 +37,7 @@ public class ExamController {
     }
 
     @GetMapping("/{courseId}")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String showExam(@PathVariable Long courseId,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
@@ -52,7 +52,7 @@ public class ExamController {
     }
 
     @GetMapping("/add-exam/{courseId}")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String createExam(@PathVariable Long courseId, Model model) {
         model.addAttribute("exam", new ExamRequestDto());
         model.addAttribute("courseId", courseId);
@@ -60,20 +60,11 @@ public class ExamController {
     }
 
     @PostMapping("/save-exam/{courseId}")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String createExam(@PathVariable Long courseId,
                              @ModelAttribute ExamRequestDto exam,
                              @AuthenticationPrincipal UserDetails userDetails,
                              HttpSession session) {
-//        String username =  userDetails.getUsername();
-//        AppUser teacher =  usersRepository.findByUsername(username).get();
-//        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
-//        Long teacherId = customUserDetails.getAppUser().getId();
-//        AppUser teacher = usersService.findById(teacherId);
-//        CustomUserDetails customUserDetails = usersService.getCustomUserDetails();
-//        AppUser teacher = customUserDetails.getAppUser();
-//        CustomUserDetails customUserDetails = (CustomUserDetails) session.getAttribute("currentUser");
-//       AppUser teacher = customUserDetails.getAppUser();
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
         AppUser teacher = customUserDetails.getAppUser();
         exam.setTeacher(teacher);
@@ -84,36 +75,32 @@ public class ExamController {
     }
 
     @GetMapping("/delete-exam/{id}")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String deleteExam(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Exam> examOptional = examsService.getExamById(id);
         if (examOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "آزمون مورد نظر یافت نشد!");
             return "redirect:/teachers/courses";
         }
-
         Exam exam = examOptional.get();
         Long courseId = exam.getCourse().getId();
         examsService.deleteExamById(id);
-
         return "redirect:/exam/" + courseId;
     }
 
     @GetMapping("/edit-exam/{id}")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String showEditExamForm(@PathVariable Long id, Model model) {
         Optional<Exam> examOptional = examsService.getExamById(id);
-
         if (examOptional.isEmpty()) {
             return "redirect:/teacher/courses";
         }
-
         model.addAttribute("exam", examOptional.get());
         return "teacher/exam/edit-exam";
     }
 
     @PostMapping("/update-exam/{id}")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String updateExam(@PathVariable Long id, @ModelAttribute Exam exam, RedirectAttributes redirectAttributes) {
         try {
             Exam updatedExam = examsService.updateExam(id, exam);

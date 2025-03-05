@@ -9,6 +9,7 @@ import ir.maktabsharif.webapplication.service.CourseService;
 import ir.maktabsharif.webapplication.service.UsersService;
 import ir.maktabsharif.webapplication.service.usersDetails.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,19 +23,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/teachers")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TeacherController {
 
     private final UsersService usersService;
-
     private final CourseService courseService;
 
-    @Autowired
-    public TeacherController(UsersService usersService, CourseService courseService) {
-        this.usersService = usersService;
-        this.courseService = courseService;
-    }
-
-//    admin
 
     @GetMapping("/{id}/edit")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -66,9 +60,8 @@ public class TeacherController {
         return "admin/users/list-teacher";
     }
 
-//    teacher
     @GetMapping("/courses")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String showCourses(Model model, Principal principal, @AuthenticationPrincipal UserDetails userDetails, HttpSession session) {
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
         session.setAttribute("currentUser", customUserDetails);

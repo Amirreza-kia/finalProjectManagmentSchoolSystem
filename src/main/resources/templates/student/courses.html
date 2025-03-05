@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Courses</title>
 </head>
 <body>
+<h1>Courses</h1>
 
+<table>
+    <thead>
+    <tr>
+        <th>عنوان دوره</th>
+        <th>تاریخ شروع</th>
+        <th>تاریخ پایان دوره</th>
+        <th>امتحانات دوره</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.title}"></td>
+        <td th:text="${course.startDate}"></td>
+        <td th:text="${course.endDate}"></td>
+        <td>
+            <form th:action="@{/students/exams/{courseId}(courseId=${course.id})}" method="get">
+                <button type="submit">آزمون‌های دوره</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

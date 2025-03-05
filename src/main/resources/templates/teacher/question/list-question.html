@@ -129,33 +129,34 @@
         </thead>
         <tbody>
         <tr th:each="question, iterStat : ${questionList}">
-            <td th:text="${question.title}"></td>
-            <td th:text="${question.questionText}"></td>
-            <td th:text="${question.typeQuestion}"></td>
+            <td th:text="${question.question.title}"></td>
+            <td th:text="${question.question.questionText}"></td>
+            <td th:text="${question.question.typeQuestion}"></td>
             <td>
                 <form th:action="@{/question/edit}" method="get">
                     <input type="hidden" name="examId" th:value="${examId}">
-                    <input type="hidden" name="questionId" th:value="${question.id}">
-                    <input type="hidden" name="typeQuestion" th:value="${question.typeQuestion}">
+                    <input type="hidden" name="questionId" th:value="${question.question.id}">
+                    <input type="hidden" name="typeQuestion" th:value="${question.question.typeQuestion}">
                     <button type="submit"><i class="fas fa-edit"></i> ویرایش</button>
                 </form>
             </td>
             <td>
-                <form th:action="@{/question/delete}" method="get">
+                <form th:action="@{/question/deleteList}" method="get">
                     <input type="hidden" name="examId" th:value="${examId}">
                     <input type="hidden" name="questionId" th:value="${question.id}">
                     <button type="submit" style="background-color: #ff4757;"><i class="fas fa-trash"></i> حذف</button>
                 </form>
             </td>
-            <td th:text="${question.defaultScore}"></td>
+            <td th:text="${question.score}"></td>
             <td>
                 <input type="number"
                        th:name="|scores[${iterStat.index}]|"
-                       th:value="${question.defaultScore}"
+                       th:value="${question.score}"
                        step="0.1"
                        class="form-control score-input"
                        oninput="updateTotalScore()">
                 <input type="hidden" th:name="|questionIds[${iterStat.index}]|" th:value="${question.id}">
+                <input type="hidden" name="questionIdReal" th:value="${question.question.id}">
             </td>
         </tr>
         </tbody>

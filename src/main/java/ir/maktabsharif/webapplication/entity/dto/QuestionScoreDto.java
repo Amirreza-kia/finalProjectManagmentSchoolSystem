@@ -11,4 +11,5 @@ import java.util.List;
 public class QuestionScoreDto {
     private List<Long> questionIds;
     private List<Double> scores;
+    private List<Long> questionIdReal;
 }

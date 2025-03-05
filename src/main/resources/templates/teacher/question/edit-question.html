@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>ویرایش سوال</title>
@@ -80,9 +80,10 @@
     <!-- فرم سوالات تشریحی -->
     <div th:if="${typeQuestion == 'DESCRIPTIVE'}" class="section">
         <h2>ویرایش سوال تشریحی</h2>
-        <form th:action="@{/questions/editDescriptive}" method="post">
-            <input type="hidden" name="id" th:value="${question.id}">
-            <textarea name="questionText" th:text="${question.questionText}" placeholder="متن سوال تشریحی را وارد کنید..." rows="5"></textarea>
+        <form th:action="@{/question/editDescriptive/{examId}(examId=${examId})}" method="post">
+            <input type="hidden" name="questionId" th:value="${question.id}">
+            <input type="text" name="questionTitle"  placeholder="موضوع سوال را وارد کنید">
+            <input type="text" name="questionText" placeholder="متن سوال را وارد کنید">
             <button type="submit">ذخیره تغییرات</button>
         </form>
     </div>
@@ -90,15 +91,21 @@
     <!-- فرم سوالات تستی -->
     <div th:if="${typeQuestion == 'MULTIPLE_CHOICE'}" class="section">
         <h2>ویرایش سوال تستی</h2>
-        <form th:action="@{/questions/editMultiple-choice}" method="post">
-            <input type="hidden" name="id" th:value="${questionM.id}">
+        <form th:action="@{/question/editMultiple-choice/{examId}(examId=${examId})}" method="post">
+            <input type="hidden" name="questionId" th:value="${question.id}">
+            <input type="text" name="questionTitle"  placeholder="موضوع سوال را وارد کنید">
             <input type="text" name="questionText" th:value="${questionM.questionText}" placeholder="متن سوال تستی را وارد کنید...">
             <div th:each="option, iterStat : ${questionM.options}">
-                <input type="text" th:name="'option' + ${iterStat.index}" th:value="${option}" placeholder="گزینه">
+                <input type="text" th:name="options" th:value="${option}" placeholder="گزینه">
             </div>
             <input type="text" name="correctAnswer" th:value="${questionM.correctAnswer}" placeholder="پاسخ صحیح (شماره گزینه)">
             <button type="submit">ذخیره تغییرات</button>
         </form>
+    </div>
+    <div>
+        <a th:href="@{/question/{examId}(examId=${examId})}" >
+            بازگشت به صفحه سوالات
+        </a>
     </div>
 </div>
 </body>

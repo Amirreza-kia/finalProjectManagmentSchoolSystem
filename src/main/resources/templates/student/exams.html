@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Exams</title>
 </head>
 <body>
-
+<h1>Exams</h1>
+<table>
+    <thead>
+    <tr>
+        <th>عنوان امتحان</th>
+        <th>مدت زمان امتحان</th>
+        <th>درس مربوطه</th>
+        <th>تعداد سوال</th>
+        <th>شروع ازمون</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="exam : ${exams}">
+        <td th:text="${exam.title}"></td>
+        <td th:text="${exam.duration}"></td>
+        <td th:text="${exam.questions.size()}"></td>
+        <td>
+            <form th:action="@{/students/takeExam/{examId}(examId=${exam.id})}" method="get">
+                <button type="submit">start</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

@@ -1,24 +1,22 @@
 package ir.maktabsharif.webapplication.service;
 
-import ir.maktabsharif.webapplication.entity.question.DescriptiveQuestion;
-import ir.maktabsharif.webapplication.entity.question.MultipleChoiceQuestion;
+import ir.maktabsharif.webapplication.entity.dto.ExamQuestionDto;
+import ir.maktabsharif.webapplication.entity.dto.QuestionMultiDto;
 import ir.maktabsharif.webapplication.entity.question.Question;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface QuestionService {
 
-    List<Question> getQuestionsByExamIdAndTeacherId(Long examId,Long teacherId);
 
-    List<Question> getQuestionsByTeacherIdAndCourseId(Long teacherId, Long courseId);
+    void createQuestionDescriptive(Question question, Long examId, UserDetails userDetails);
 
-    void createQuestionDescriptive(DescriptiveQuestion question);
+    void createQuestionMultiple(QuestionMultiDto question,Long examId, UserDetails userDetails);
 
-    void createQuestionMultiple(MultipleChoiceQuestion question);
+    Question updateQuestion(ExamQuestionDto examQuestionDto);
 
-    Question updateQuestion(Question question);
-
-    void deleteQuestionById(Long questionId);
+    void deleteQuestionById(Long questionId,Long examId);
 
 
 
@@ -26,10 +24,11 @@ public interface QuestionService {
     List<Question> getQuestionByTeacherId(Long teacherId);
 
 
-    void addOptionToQuestion(Question question, String optionText,boolean isCorrect);
-
-    void updateQuestionScore(Long questionId,Double score);
+    void updateQuestionScore(Long questionId,Double score,Long questionIdReal);
 
     Question getQuestionById(Long questionId);
 
+    void updateMultipleChoiceQuestion(QuestionMultiDto questionMultiDto);
+
+    List<Question> getQuestionByTeacherIdAndCourseId(Long teacherId, Long courseId);
 }

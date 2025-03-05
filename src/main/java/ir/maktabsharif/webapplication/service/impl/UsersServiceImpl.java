@@ -11,6 +11,7 @@ import ir.maktabsharif.webapplication.repository.UsersRepository;
 import ir.maktabsharif.webapplication.service.UsersService;
 import ir.maktabsharif.webapplication.service.usersDetails.CustomUserDetails;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,21 +22,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UsersServiceImpl implements UsersService {
 
 
     private final UsersRepository usersRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-
-
-    @Autowired
-    public UsersServiceImpl(UsersRepository usersRepository, PasswordEncoder passwordEncoder) {
-        this.usersRepository = usersRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
 
     @Override
     public AppUser findById(Long id) throws ResourceNotFoundException {

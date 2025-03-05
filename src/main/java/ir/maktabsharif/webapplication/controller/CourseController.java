@@ -7,6 +7,7 @@ import ir.maktabsharif.webapplication.entity.Role;
 import ir.maktabsharif.webapplication.entity.dto.CourseRequestDto;
 import ir.maktabsharif.webapplication.service.CourseService;
 import ir.maktabsharif.webapplication.service.UsersService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,14 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/course")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseController {
     private final CourseService courseService;
     private final UsersService usersService;
-    @Autowired
-    public CourseController(CourseService courseService, UsersService usersService) {
-        this.courseService = courseService;
-        this.usersService = usersService;
-    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")

@@ -1,9 +1,12 @@
 package ir.maktabsharif.webapplication.service.usersDetails;
 
 import ir.maktabsharif.webapplication.entity.AppUser;
+import ir.maktabsharif.webapplication.exception.ResourceNotFoundException;
 import lombok.Getter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -55,4 +58,7 @@ public class CustomUserDetails implements UserDetails {
         return UserDetails.super.isAccountNonExpired();
     }
 
+    public Long getId() {
+        return appUser.getId();
+    }
 }

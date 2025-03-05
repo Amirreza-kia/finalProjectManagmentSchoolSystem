@@ -13,6 +13,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     //bank teacher
     List<Question> findQuestionByTeacherId(Long teacherId);
 
+    List<Question> findByTeacherIdAndCourseId(Long teacherId, Long courseId);
 
 
 }

@@ -7,23 +7,18 @@ import ir.maktabsharif.webapplication.repository.CourseRepository;
 import ir.maktabsharif.webapplication.repository.UsersRepository;
 import ir.maktabsharif.webapplication.service.CourseService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
-
     private final UsersRepository usersRepository;
-
-    @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, UsersRepository usersRepository) {
-        this.courseRepository = courseRepository;
-        this.usersRepository = usersRepository;
-    }
 
     @Override
     @Transactional
@@ -142,5 +137,10 @@ public class CourseServiceImpl implements CourseService {
             throw new ResourceNotFoundException("Course list Not Found");
         }
         return courseList;
+    }
+
+    @Override
+    public List<Course> findAllCoursesByStudentId(Long studentId) throws ResourceNotFoundException {
+        return courseRepository.findByStudentsId(studentId);
     }
 }

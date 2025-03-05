@@ -2,11 +2,14 @@ package ir.maktabsharif.webapplication.entity;
 
 
 import ir.maktabsharif.webapplication.entity.base.BaseEntity;
+import ir.maktabsharif.webapplication.entity.question.ExamQuestion;
 import ir.maktabsharif.webapplication.entity.question.Question;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +25,13 @@ public class Exam extends BaseEntity<Long> {
     private String title;
     @Column(nullable = false)
     private String description;
+
+    //زمان محاسبه برای ازمون
     @Column(nullable = false)
     private int duration;
+
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     @ManyToOne
     private AppUser teacher;
@@ -33,22 +41,17 @@ public class Exam extends BaseEntity<Long> {
     private Course course;
 
 
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "exam_question",
+            name = "exam_examQuestion",
             joinColumns = @JoinColumn(name = "exam_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id")
     )
-    private List<Question> questions = new ArrayList<>();
+    private List<ExamQuestion> questions = new ArrayList<>();
 
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Question> questions = new ArrayList<>();
 
-//    @ElementCollection
-//    @CollectionTable(name = "exam_questions", joinColumns = @JoinColumn(name = "exam_id"))
-//    @Column(name = "question")
-//    private List<String> questions = new ArrayList<>();
+    @OneToMany(mappedBy = "exam")
+    private List<StudentExam> studentExams = new ArrayList<>();
 
 
 }
