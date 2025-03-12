@@ -1,12 +1,146 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Student Dashboard</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>صفحه دانش آموز</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6a1b9a, #9c27b0);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header nav {
+            margin-top: 20px;
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        header nav ul li form button {
+            background-color: #8e24aa;
+            color: #fff;
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        header nav ul li form button:hover {
+            background-color: #9c27b0;
+            transform: translateY(-5px);
+        }
+        main {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-in-out;
+            margin-top: 20px;
+        }
+
+        main h2 {
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        main p {
+            font-size: 18px;
+            color: #eee;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            background: rgba(106, 27, 154, 0.8);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+            color: #fff;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
 </head>
 <body>
 <header>
-    <h1>Welcome, Student!</h1>
+    <h1 class="floating">خوش آمدید دانش آموز گرامی</h1>
     <nav>
         <ul>
             <li>
@@ -14,16 +148,18 @@
                     <button type="submit">دوره‌های من</button>
                 </form>
             </li>
-            <li><a href="/student/courses">Courses</a></li>
-            <li><a href="/student/exams">Exams</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">خروج</button>
+                </form>
+            </li>
         </ul>
     </nav>
 </header>
 
 <main>
-    <h2 th:text="${message}"></h2>
-    <p>This is the student dashboard. You can view your courses and exams here.</p>
+    <h2 th:text="${message}">خوش آمدید!</h2>
+    <p>این صفحه دانش آموز است. شما می‌توانید در اینجا امتحانات خود را مدیریت کنید.</p>
 </main>
 
 <footer>

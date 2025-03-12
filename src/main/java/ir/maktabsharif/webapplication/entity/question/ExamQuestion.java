@@ -1,8 +1,8 @@
 package ir.maktabsharif.webapplication.entity.question;
 
 
-import ir.maktabsharif.webapplication.entity.Answer;
 import ir.maktabsharif.webapplication.entity.Exam;
+import ir.maktabsharif.webapplication.entity.answer.Answer;
 import ir.maktabsharif.webapplication.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ public class ExamQuestion extends BaseEntity<Long>  {
 
 
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "exam_id")
-//    private Exam exam;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "exam_id")
+    private Exam exam;
 }

@@ -4,11 +4,16 @@ package ir.maktabsharif.webapplication.controller;
 import ir.maktabsharif.webapplication.entity.AppUser;
 import ir.maktabsharif.webapplication.entity.Course;
 import ir.maktabsharif.webapplication.entity.Exam;
+import ir.maktabsharif.webapplication.entity.answer.StudentExam;
+import ir.maktabsharif.webapplication.entity.answer.Answer;
 import ir.maktabsharif.webapplication.entity.dto.ExamRequestDto;
-import ir.maktabsharif.webapplication.service.CourseService;
-import ir.maktabsharif.webapplication.service.ExamsService;
+import ir.maktabsharif.webapplication.entity.question.ExamQuestion;
+import ir.maktabsharif.webapplication.entity.question.TypeQuestion;
+import ir.maktabsharif.webapplication.repository.AnswerRepository;
+import ir.maktabsharif.webapplication.service.*;
 import ir.maktabsharif.webapplication.service.usersDetails.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,23 +23,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/exam")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExamController {
 
     private final ExamsService examsService;
     private final CourseService courseService;
+    private final StudentExamService studentExamService;
+    private final AnswerService answerService;
 
-
-    @Autowired
-    public ExamController(ExamsService examsService,
-                          CourseService courseService) {
-        this.examsService = examsService;
-        this.courseService = courseService;
-    }
 
     @GetMapping("/{courseId}")
     @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
@@ -111,5 +113,51 @@ public class ExamController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/teachers/courses";
         }
+    }
+
+    @GetMapping("/nameStudent/{examId}")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
+    public String showNameStudent(@PathVariable Long examId, Model model) {
+        Exam exam = examsService.getExamById(examId).get();
+        List<StudentExam> studentExamList = exam.getStudentExams();
+        model.addAttribute("studentExamList", studentExamList);
+        return "teacher/answer/nameStudent";
+    }
+
+    @GetMapping("/result/{studentExamId}")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
+    public String showResult(@PathVariable Long studentExamId, Model model) {
+        StudentExam studentExam = studentExamService.getById(studentExamId);
+        examsService.calculateMultipleChoiceScore(studentExam);
+        double totalScoreStudent = examsService.calculateTotalScoreStudent(studentExam);
+        List<ExamQuestion> examQuestions = studentExam.getExam().getQuestions();
+        double totalScore = examsService.calculateTotalScore(examQuestions);
+        List<Answer> answerList = studentExam.getAnswers();
+        List<Answer> dAnswers = new ArrayList<>();
+        for (Answer answer : answerList) {
+            if (answer.getQuestion().getQuestion().getTypeQuestion() == TypeQuestion.DESCRIPTIVE) {
+                dAnswers.add(answer);
+            }
+        }
+        model.addAttribute("answerList", dAnswers);
+        model.addAttribute("studentExamId", studentExamId);
+        model.addAttribute("totalScore", totalScore);
+        model.addAttribute("totalScoreStudent", totalScoreStudent);
+        return "teacher/answer/examResult";
+    }
+
+    @PostMapping("/answers/updateScore/{answerId}")
+    @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
+    public String updateScore(@PathVariable Long answerId,
+                              @RequestParam double score,
+                              Model model,
+                              @RequestParam Long studentExamId) {
+        Answer answer = answerService.findById(answerId);
+        if (score > answer.getQuestion().getScore()) {
+            model.addAttribute("error", "max score cant add");
+        }
+        answer.setScore(score);
+        answerService.saveAnswer(answer);
+        return "redirect:/exam/result/" + studentExamId;
     }
 }

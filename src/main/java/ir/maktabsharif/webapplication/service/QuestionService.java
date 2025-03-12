@@ -12,23 +12,23 @@ public interface QuestionService {
 
     void createQuestionDescriptive(Question question, Long examId, UserDetails userDetails);
 
-    void createQuestionMultiple(QuestionMultiDto question,Long examId, UserDetails userDetails);
+    void createQuestionMultiple(QuestionMultiDto question, Long examId, UserDetails userDetails);
 
     Question updateQuestion(ExamQuestionDto examQuestionDto);
 
-    void deleteQuestionById(Long questionId,Long examId);
+    void deleteQuestionById(Long questionId, Long examId);
 
 
-
-    //bank teacher
     List<Question> getQuestionByTeacherId(Long teacherId);
 
 
-    void updateQuestionScore(Long questionId,Double score,Long questionIdReal);
+    void updateQuestionScore(Long questionId, Double score, Long questionIdReal);
 
     Question getQuestionById(Long questionId);
 
     void updateMultipleChoiceQuestion(QuestionMultiDto questionMultiDto);
 
+
+    //bank teacher
     List<Question> getQuestionByTeacherIdAndCourseId(Long teacherId, Long courseId);
 }

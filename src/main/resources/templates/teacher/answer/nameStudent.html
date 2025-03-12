@@ -149,50 +149,28 @@
 <body >
 
 <div class="container">
-    <h2>آزمون‌های دوره: <span th:text="${course.title}"></span></h2>
-
-    <form th:action="@{/exam/add-exam/{id}(id=${courseId})}" method="get">
-        <button type="submit">➕ افزودن آزمون جدید</button>
-    </form>
-
     <table class="table">
         <thead>
         <tr>
             <th>عنوان آزمون</th>
-            <th>توضیحات</th>
-            <th>مدت زمان (دقیقه)</th>
-            <th>استاد طراح آزمون</th>
-            <th>حذف آزمون</th>
-            <th>ویرایش آزمون</th>
-            <th>تعداد افراد شرکت کننده</th>
-            <th>نام افراد</th>
+            <th>نام دانشجو</th>
+            <th>نام خانوادگی دانشجو</th>
+            <th>تایین نمره</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="exam : ${exams}">
-            <td th:text="${exam.title}"></td>
-            <td th:text="${exam.description}"></td>
-            <td th:text="${exam.duration}"></td>
-            <td th:text="${exam.teacher.firstName}"></td>
+        <tr th:each="exam : ${studentExamList}">
+            <td th:text="${exam.exam.title}"></td>
+            <td th:text="${exam.student.firstName}"></td>
+            <td th:text="${exam.student.lastName}"></td>
             <td>
-                <form th:action="@{/exam/delete-exam/{examId}(examId=${exam.id})}" method="get">
-                    <button type="submit" style="background-color: #dc3545;">🗑️ حذف آزمون</button>
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/exam/edit-exam/{id}(id=${exam.id})}" method="get">
-                    <button type="submit" style="background-color: #28a745;">✏️ ویرایش آزمون</button>
-                </form>
-            </td>
-            <td th:text="${course.students.size()}"></td>
-            <td>
-                <form th:action="@{/exam/nameStudent/{examId}(examId=${exam.id})}" method="get">
-                    <button type="submit" style="background-color: #ea2bff">نام افراد شرکت کننده</button>
+                <form th:action="@{/exam/result/{studentExamId}(studentExamId=${exam.id})}" method="get">
+                    <button type="submit" style="background-color: #28ff9b;">تایین نمره سوالات تشریحی</button>
                 </form>
             </td>
         </tr>
-        <tr th:if="${#lists.isEmpty(exams)}">
-            <td colspan="5" class="text-center">هیچ آزمونی برای این دوره ایجاد نشده است.</td>
+        <tr th:if="${#lists.isEmpty(studentExamList)}">
+            <td colspan="5" class="text-center">هیچ دانشجویی برای این دوره ایجاد نشده است.</td>
         </tr>
         </tbody>
     </table>

@@ -22,7 +22,6 @@ public class ExamRequestDto {
     private String duration;
     private Course course;
     private AppUser teacher;
-
     private List<Question> questions;
 
 }

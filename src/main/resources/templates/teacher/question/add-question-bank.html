@@ -126,11 +126,6 @@
         <td th:text="${question.title}"></td>
         <td th:text="${question.questionText}"></td>
         <td th:text="${question.typeQuestion}"></td>
-<!--        <td>-->
-<!--            <form th:action="@{/question/{id}/edit(id=${question.id})}" method="get">-->
-<!--                <button type="submit">ویرایش سوال</button>-->
-<!--            </form>-->
-<!--        </td>-->
         <td>
             <form th:action="@{/question/delete}" method="get">
                 <input type="hidden" name="questionId" th:value="${question.id}">

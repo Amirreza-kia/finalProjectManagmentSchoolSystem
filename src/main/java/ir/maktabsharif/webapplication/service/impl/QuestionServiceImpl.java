@@ -37,6 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Exam not found"));
         ExamQuestion examQuestion = new ExamQuestion();
         examQuestion.setQuestion(question);
+        examQuestion.setExam(exam);
         exam.getQuestions().add(examQuestion);
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
         AppUser teacher = customUserDetails.getAppUser();
@@ -64,6 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setTeacher(teacher);
         ExamQuestion examQuestion = new ExamQuestion();
         examQuestion.setQuestion(question);
+        examQuestion.setExam(exam);
         exam.getQuestions().add(examQuestion);
         question.setTypeQuestion(TypeQuestion.MULTIPLE_CHOICE);
         questionRepository.save(question);

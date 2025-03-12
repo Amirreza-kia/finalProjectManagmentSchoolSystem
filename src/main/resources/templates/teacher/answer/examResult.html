@@ -149,55 +149,50 @@
 <body >
 
 <div class="container">
-    <h2>آزمون‌های دوره: <span th:text="${course.title}"></span></h2>
-
-    <form th:action="@{/exam/add-exam/{id}(id=${courseId})}" method="get">
-        <button type="submit">➕ افزودن آزمون جدید</button>
-    </form>
-
     <table class="table">
         <thead>
         <tr>
-            <th>عنوان آزمون</th>
-            <th>توضیحات</th>
-            <th>مدت زمان (دقیقه)</th>
-            <th>استاد طراح آزمون</th>
-            <th>حذف آزمون</th>
-            <th>ویرایش آزمون</th>
-            <th>تعداد افراد شرکت کننده</th>
-            <th>نام افراد</th>
+            <th>نوع سوال</th>
+            <th>متن سوال</th>
+            <th>جواب سوال</th>
+            <th>عملیات</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="exam : ${exams}">
-            <td th:text="${exam.title}"></td>
-            <td th:text="${exam.description}"></td>
-            <td th:text="${exam.duration}"></td>
-            <td th:text="${exam.teacher.firstName}"></td>
+        <tr th:each="answer : ${answerList}">
+            <td th:text="${answer.question.question.typeQuestion}"></td>
+            <td th:text="${answer.question.question.questionText}"></td>
+            <td th:text="${answer.answerText}"></td>
             <td>
-                <form th:action="@{/exam/delete-exam/{examId}(examId=${exam.id})}" method="get">
-                    <button type="submit" style="background-color: #dc3545;">🗑️ حذف آزمون</button>
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/exam/edit-exam/{id}(id=${exam.id})}" method="get">
-                    <button type="submit" style="background-color: #28a745;">✏️ ویرایش آزمون</button>
-                </form>
-            </td>
-            <td th:text="${course.students.size()}"></td>
-            <td>
-                <form th:action="@{/exam/nameStudent/{examId}(examId=${exam.id})}" method="get">
-                    <button type="submit" style="background-color: #ea2bff">نام افراد شرکت کننده</button>
+                <form th:action="@{/exam/answers/updateScore/{answerId}(answerId=${answer.id})}" method="post">
+                    <input type="number" th:name="score" th:value="${answer.score}" th:max="${answer.question.score}" />
+                    <input type="hidden" th:name="studentExamId" th:value="${studentExamId}">
+                    <button type="submit">ذخیره نمره</button>
                 </form>
             </td>
         </tr>
-        <tr th:if="${#lists.isEmpty(exams)}">
-            <td colspan="5" class="text-center">هیچ آزمونی برای این دوره ایجاد نشده است.</td>
+        <tr th:if="${#lists.isEmpty(answerList)}">
+            <td colspan="5" class="text-center">هیچ جوابی برای این سوال ایجاد نشده است.</td>
         </tr>
         </tbody>
     </table>
 </div>
-
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>جمع نمرات دانشجو</th>
+            <th>نمرات کل ازمون</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${totalScoreStudent}"></td>
+            <td th:text="${totalScore}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 <div class="back-link">
     <a th:href="@{/dashboard}">🔙 بازگشت به صفحه ادمین</a>
 </div>

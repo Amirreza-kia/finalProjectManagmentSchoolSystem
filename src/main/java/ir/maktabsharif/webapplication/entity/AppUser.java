@@ -20,10 +20,13 @@ public  class AppUser extends BaseEntity<Long> {
     @Column(unique = true)
     @NotNull
     private String username;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String firstName;
+
     @Column(nullable = false)
     private String lastName;
 
@@ -42,10 +45,6 @@ public  class AppUser extends BaseEntity<Long> {
 
     @ManyToMany(mappedBy = "students")
     private List<Course> enrolledCourses;
-
-
-
-
 
 
     //بانک سوالات استاد

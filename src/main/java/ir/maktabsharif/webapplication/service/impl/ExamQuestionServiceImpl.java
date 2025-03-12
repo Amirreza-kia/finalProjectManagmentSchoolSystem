@@ -38,7 +38,8 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
     }
 
     @Override
+    @Transactional
     public void deleteExamQuestionId(Long questionId) {
-      examQuestionRepository.deleteByQuestionId(questionId);
+      examQuestionRepository.removeExamQuestionById(questionId);
     }
 }

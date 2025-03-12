@@ -41,7 +41,7 @@ public class QuestionController {
     @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     public String questionList(@PathVariable Long examId, Model model) {
         Exam exam = examsService.getExamById(examId)
-                .orElseThrow(()->new ResourceNotFoundException("Exam not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found"));
         model.addAttribute("questionList", exam.getQuestions());
         model.addAttribute("examId", examId);
         return "/teacher/question/list-question";
@@ -62,7 +62,7 @@ public class QuestionController {
     public String addDescriptiveQuestion(@PathVariable("examId") Long examId,
                                          @ModelAttribute("question") Question question,
                                          @AuthenticationPrincipal UserDetails userDetails) {
-        questionService.createQuestionDescriptive(question,examId,userDetails);
+        questionService.createQuestionDescriptive(question, examId, userDetails);
         return "redirect:/question/" + examId;
     }
 
@@ -90,7 +90,7 @@ public class QuestionController {
                 .options(options)
                 .correctAnswer(String.valueOf(correctAnswer))
                 .build();
-        questionService.createQuestionMultiple(questionMultiDto,examId,userDetails);
+        questionService.createQuestionMultiple(questionMultiDto, examId, userDetails);
         return "redirect:/question/" + examId;
     }
 
@@ -101,7 +101,7 @@ public class QuestionController {
                           Model model,
                           @AuthenticationPrincipal UserDetails userDetails) {
         Exam exam = examsService.getExamById(examId)
-                .orElseThrow(()->new ResourceNotFoundException("Exam not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found"));
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
         Long teacherId = customUserDetails.getAppUser().getId();
         Long courseId = exam.getCourse().getId();
@@ -117,9 +117,15 @@ public class QuestionController {
     public String addBankToExam(@RequestParam Long examId,
                                 @RequestParam Long questionId) {
         Exam exam = examsService.getExamById(examId)
-                .orElseThrow(()->new ResourceNotFoundException("Exam not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found"));
         Question question = questionService.getQuestionById(questionId);
+        boolean questionExists = exam.getQuestions().stream()
+                .anyMatch(examQuestion -> examQuestion.getQuestion().getId().equals(questionId));
+        if (questionExists) {
+            return "redirect:/question/" + examId + "?error=Question already exists in the exam";
+        }
         ExamQuestion examQuestion = new ExamQuestion();
+        examQuestion.setExam(exam);
         examQuestion.setQuestion(question);
         exam.getQuestions().add(examQuestion);
         examsService.updateBankQuestion(examId, exam);
@@ -201,10 +207,12 @@ public class QuestionController {
         Exam exam = examsService.getExamById(examId).get();
         ExamQuestion question = examQuestionService.findExamQuestionById(questionId);
         exam.getQuestions().remove(question);
+        examQuestionService.deleteExamQuestionId(questionId);
         examsService.updateExam(examId, exam);
         return "redirect:/question/" + examId;
     }
 
+//    @DeleteMapping("/delete")
     @GetMapping("/delete")
     @PreAuthorize("hasAnyAuthority('TEACHER') and authentication.principal.id == @customUserDetailsService.getCurrentUserId()")
     @Transactional

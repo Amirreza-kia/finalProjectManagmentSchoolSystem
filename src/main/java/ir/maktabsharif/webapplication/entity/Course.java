@@ -21,9 +21,12 @@ public class Course extends BaseEntity<Long> {
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false,unique = true)
     private String courseCode;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
 
 

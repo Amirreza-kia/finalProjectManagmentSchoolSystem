@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @AllArgsConstructor
 @NoArgsConstructor
 public  class Question extends BaseEntity<Long> {
@@ -37,6 +38,10 @@ public  class Question extends BaseEntity<Long> {
     private AppUser teacher;
 
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
     //multiple question
     @ElementCollection
     @CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
@@ -45,11 +50,7 @@ public  class Question extends BaseEntity<Long> {
     private String correctAnswer;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
-
-//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ExamQuestion> examQuestions;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExamQuestion> examQuestions;
 
 }

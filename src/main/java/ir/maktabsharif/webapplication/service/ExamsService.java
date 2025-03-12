@@ -1,8 +1,9 @@
 package ir.maktabsharif.webapplication.service;
 
 import ir.maktabsharif.webapplication.entity.Exam;
+import ir.maktabsharif.webapplication.entity.answer.StudentExam;
 import ir.maktabsharif.webapplication.entity.dto.ExamRequestDto;
-import ir.maktabsharif.webapplication.entity.question.Question;
+import ir.maktabsharif.webapplication.entity.question.ExamQuestion;
 import ir.maktabsharif.webapplication.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public interface ExamsService {
 
     Exam updateBankQuestion(Long examId, Exam updateExam);
 
+    double calculateTotalScore(List<ExamQuestion> examQuestions);
+    double calculateTotalScoreStudent(StudentExam studentExam);
+    void calculateMultipleChoiceScore(StudentExam studentExam);
+    String calculateRemainingTime(StudentExam studentExam);
 
-    List<Exam> getAvailableExamsStudent(Long studentId,Long courseId);
 }

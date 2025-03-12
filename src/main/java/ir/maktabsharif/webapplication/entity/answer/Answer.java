@@ -1,11 +1,9 @@
-package ir.maktabsharif.webapplication.entity;
+package ir.maktabsharif.webapplication.entity.answer;
 
+import ir.maktabsharif.webapplication.entity.AppUser;
 import ir.maktabsharif.webapplication.entity.base.BaseEntity;
 import ir.maktabsharif.webapplication.entity.question.ExamQuestion;
-import ir.maktabsharif.webapplication.entity.question.Question;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Answer extends BaseEntity<Long> {
 
-    private String answerText;
-    private boolean correct;
+    double score;
 
     @ManyToOne
     private AppUser student;
@@ -27,4 +24,12 @@ public class Answer extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "questionId")
     private ExamQuestion question;
+
+    @ManyToOne
+    @JoinColumn(name = "student_exam_id")
+    private StudentExam studentExam;
+
+    private String answerText;
+
+    private String selectedOption;
 }

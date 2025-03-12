@@ -1,14 +1,13 @@
 package ir.maktabsharif.webapplication.entity;
 
 
+import ir.maktabsharif.webapplication.entity.answer.StudentExam;
 import ir.maktabsharif.webapplication.entity.base.BaseEntity;
 import ir.maktabsharif.webapplication.entity.question.ExamQuestion;
-import ir.maktabsharif.webapplication.entity.question.Question;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,15 @@ public class Exam extends BaseEntity<Long> {
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String description;
 
-    //زمان محاسبه برای ازمون
     @Column(nullable = false)
     private int duration;
 
     private LocalDateTime startTime;
+
     private LocalDateTime endTime;
 
     @ManyToOne
@@ -41,16 +41,11 @@ public class Exam extends BaseEntity<Long> {
     private Course course;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "exam_examQuestion",
-            joinColumns = @JoinColumn(name = "exam_id"),
-            inverseJoinColumns = @JoinColumn(name = "question_id")
-    )
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "exam")
     private List<ExamQuestion> questions = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "exam")
+    @OneToMany(mappedBy = "exam",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<StudentExam> studentExams = new ArrayList<>();
 
 

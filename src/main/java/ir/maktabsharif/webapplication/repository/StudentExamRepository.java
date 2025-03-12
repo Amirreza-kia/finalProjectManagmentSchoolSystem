@@ -1,6 +1,9 @@
 package ir.maktabsharif.webapplication.repository;
 
-import ir.maktabsharif.webapplication.entity.StudentExam;
+import ir.maktabsharif.webapplication.entity.AppUser;
+import ir.maktabsharif.webapplication.entity.Exam;
+import ir.maktabsharif.webapplication.entity.answer.Status;
+import ir.maktabsharif.webapplication.entity.answer.StudentExam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +14,7 @@ import java.util.Optional;
 public interface StudentExamRepository extends JpaRepository<StudentExam, Long> {
 
         Optional<StudentExam> findByStudentIdAndExamId(Long studentId, Long examId);
-
-        List<StudentExam> findByExamIdAndCompletedNot(Long examId, boolean completed);
-        StudentExam findByStudentIdAndCompletedFalseAndExamId(Long studentId, Long examId);
-        StudentExam findByExamId(Long examId);
+        StudentExam findByStudentIdAndExamIdAndStatus(Long studentId, Long examId, Status status);
+        StudentExam findByStudentAndExam(AppUser student, Exam exam);
 
 }
